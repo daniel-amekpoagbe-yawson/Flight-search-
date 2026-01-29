@@ -2,7 +2,7 @@
 
 /* Apply Poppins font globally */
 * {
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 html {
@@ -13,6 +13,7 @@ body {
   background-color: #f8f9fa;
   color: #1a1a1a;
 }
+
 
 /* Design Tokens */
 :root {
@@ -127,17 +128,17 @@ body {
   .scrollbar-thin::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   .scrollbar-thin::-webkit-scrollbar-track {
     background: #f1f1f1;
     border-radius: 10px;
   }
-  
+
   .scrollbar-thin::-webkit-scrollbar-thumb {
     background: #888;
     border-radius: 10px;
   }
-  
+
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
@@ -151,7 +152,12 @@ body {
 }
 
 /* Remove default transitions on focus/active to prevent jank */
-button, a, input, select, textarea {
-  transition-property: background-color, border-color, color, fill, stroke, transform, box-shadow;
+button,
+a,
+input,
+select,
+textarea {
+  transition-property:
+    background-color, border-color, color, fill, stroke, transform, box-shadow;
   transition-duration: 150ms;
 }

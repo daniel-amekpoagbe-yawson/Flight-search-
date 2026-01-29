@@ -20,7 +20,7 @@ class AmadeusService {
   constructor() {
     // Initialize axios instance with base configuration
     this.api = axios.create({
-      baseURL: 'https://test.api.amadeus.com/v2',
+      baseURL: 'https://test.api.amadeus.com',
       timeout: 30000, // 30 second timeout for flight searches
       headers: {
         'Content-Type': 'application/json',
@@ -110,10 +110,7 @@ class AmadeusService {
       // Ensure we have a valid token
       await this.ensureValidToken();
       
-      const response = await axios.get('https://test.api.amadeus.com/v1/reference-data/locations', {
-        headers: {
-          Authorization: `Bearer ${this.accessToken}`,
-        },
+      const response = await this.api.get('/v1/reference-data/locations', {
         params: {
           subType: 'AIRPORT,CITY',
           keyword,
@@ -139,7 +136,7 @@ class AmadeusService {
         destinationLocationCode: params.destination,
         departureDate: params.departureDate,
         adults: params.adults,
-        max: params.maxResults || 50, // Limit results for performance
+        max: params.maxResults || 20, // Default to 20 items per page
         currencyCode: params.currencyCode || 'USD',
       };
 
@@ -165,7 +162,7 @@ class AmadeusService {
       }
 
       const response = await this.api.get<FlightOffersResponse>(
-        '/shopping/flight-offers',
+        '/v2/shopping/flight-offers',
         { params: queryParams }
       );
 

@@ -26,14 +26,23 @@ export const PriceChart: React.FC<PriceChartProps> = ({
 }) => {
   // Group data by price buckets for cleaner visualization
   const chartData = useMemo(() => {
+    // Safety check: if no data, return empty array
+    if (!priceTrend.current.length) return [];
+
     const allPrices = priceTrend.current.map(d => d.price).sort((a, b) => a - b);
     const filteredPrices = priceTrend.filtered.map(d => d.price).sort((a, b) => a - b);
+
+    // Double check to avoid Infinity
+    if (allPrices.length === 0) return [];
 
     // Create buckets
     const bucketSize = 50;
     const min = Math.floor(Math.min(...allPrices) / bucketSize) * bucketSize;
     const max = Math.ceil(Math.max(...allPrices) / bucketSize) * bucketSize;
     
+    // Safety check for invalid range
+    if (!isFinite(min) || !isFinite(max)) return [];
+
     const buckets: Record<number, { all: number; filtered: number }> = {};
     
     for (let i = min; i <= max; i += bucketSize) {
@@ -57,6 +66,14 @@ export const PriceChart: React.FC<PriceChartProps> = ({
       filtered: counts.filtered,
     }));
   }, [priceTrend.current, priceTrend.filtered]);
+
+  if (chartData.length === 0) {
+    return (
+      <Card className="mb-6 p-6 text-center text-gray-500">
+        <p>No price data available for visualization.</p>
+      </Card>
+    );
+  }
 
   return (
     <Card className="mb-6">

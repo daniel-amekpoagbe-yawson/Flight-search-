@@ -5,31 +5,61 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Select } from '../../components/ui/Select';
 import { Card } from '../../components/ui/Card';
+import { useDebounce } from '../../hooks/useDebounce';
 import { useAirportSearch } from '../../hooks/useFlights';
 import type { SearchParams, AirportSearchResult } from '../../types/flight';
 
 interface SearchFormProps {
   onSearch: (params: SearchParams) => void;
   isLoading?: boolean;
+  initialValues?: Partial<SearchParams>;
 }
 
-export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) => {
-  // Form state
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
-  const [adults, setAdults] = useState(1);
-  const [tripType, setTripType] = useState<'roundtrip' | 'oneway'>('roundtrip');
+export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, initialValues }) => {
+  // Form state - Initialize from URL params if available
+  const [origin, setOrigin] = useState(initialValues?.origin || '');
+  const [destination, setDestination] = useState(initialValues?.destination || '');
+  const [departureDate, setDepartureDate] = useState(initialValues?.departureDate || '');
+  const [returnDate, setReturnDate] = useState(initialValues?.returnDate || '');
+  const [adults, setAdults] = useState(initialValues?.adults || 1);
+  const [tripType, setTripType] = useState<'roundtrip' | 'oneway'>(
+    initialValues?.returnDate ? 'roundtrip' : 'oneway'
+  );
   
-  // Selected airport codes
-  const [selectedOrigin, setSelectedOrigin] = useState('');
-  const [selectedDestination, setSelectedDestination] = useState('');
+  // Selected airport codes - Sync with inputs initially
+  const [selectedOrigin, setSelectedOrigin] = useState(initialValues?.origin || '');
+  const [selectedDestination, setSelectedDestination] = useState(initialValues?.destination || '');
   
+  // Update state when initialValues change (URL sync)
+  useEffect(() => {
+    if (initialValues) {
+      if (initialValues.origin) {
+        setOrigin(initialValues.origin);
+        setSelectedOrigin(initialValues.origin);
+      }
+      if (initialValues.destination) {
+        setDestination(initialValues.destination);
+        setSelectedDestination(initialValues.destination);
+      }
+      if (initialValues.departureDate) setDepartureDate(initialValues.departureDate);
+      if (initialValues.returnDate) {
+        setReturnDate(initialValues.returnDate);
+        setTripType('roundtrip');
+      } else {
+        setTripType('oneway');
+      }
+      if (initialValues.adults) setAdults(initialValues.adults);
+    }
+  }, [initialValues]);
+
   // Autocomplete state
   const [showOriginSuggestions, setShowOriginSuggestions] = useState(false);
   const [showDestinationSuggestions, setShowDestinationSuggestions] = useState(false);
   const [activeField, setActiveField] = useState<'origin' | 'destination' | null>(null);
+
+  // Debounce search inputs (500ms delay) to prevent rate limiting
+  const debouncedOrigin = useDebounce(origin, 500);
+  const debouncedDestination = useDebounce(destination, 500);
 
   // Refs for click outside detection
   const originRef = useRef<HTMLDivElement>(null);
@@ -38,14 +68,15 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
   // Get today's date for min date validation
   const today = new Date().toISOString().split('T')[0];
 
-  // Airport search with debouncing handled by React Query
+  // Airport search with debouncing handled by custom hook
+  // We use the DEBOUNCED value for the API query key
   const { airports: originAirports, isLoading: isLoadingOrigin } = useAirportSearch(
-    origin,
+    debouncedOrigin,
     activeField === 'origin'
   );
   
   const { airports: destinationAirports, isLoading: isLoadingDestination } = useAirportSearch(
-    destination,
+    debouncedDestination,
     activeField === 'destination'
   );
 

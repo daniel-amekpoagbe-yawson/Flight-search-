@@ -1,34 +1,32 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useState, useEffect } from 'react';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import type { SearchParams } from '../types/flight';
 import { useFlightFilters, useFlightSearch, useFlightSort, usePriceTrend } from '../hooks/useFlights';
-import { useSearchParamsURL } from '../hooks/useLocalStorage';
 import { SearchForm } from '../components/search/SearchForm';
 import { PriceChart } from '../components/charts/PriceChart';
 import { FilterPanel } from '../components/filters/FilterPanel';
 import { FlightList } from '../components/results/FlightList';
 import { SortControls } from '../components/results/SortControls';
 
-function FlightSearchPage() {
-  const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
-  const { getQueryParams, setQueryParams } = useSearchParamsURL();
+// Define search params validation
+type FlightSearchSchema = Partial<SearchParams>;
 
-  // Initialize from URL if available
-  useEffect(() => {
-    const urlParams = getQueryParams();
-    if (urlParams && !searchParams) {
-      setSearchParams(urlParams);
-    }
-  }, [getQueryParams, searchParams]);
+function FlightSearchPage() {
+  const navigate = useNavigate({ from: Route.fullPath });
+  const searchParams = Route.useSearch();
+
+  // Determine if we have enough params to search
+  const hasRequiredParams = !!(searchParams.origin && searchParams.destination && searchParams.departureDate);
+  const activeSearchParams = hasRequiredParams ? (searchParams as SearchParams) : null;
 
   // Update URL when search params change
   const handleSearch = (params: SearchParams) => {
-    setSearchParams(params);
-    setQueryParams(params);
+    navigate({
+      search: (prev) => ({ ...prev, ...params }),
+    });
   };
 
   // Fetch flights
-  const { flights, dictionaries, isLoading, error } = useFlightSearch(searchParams);
+  const { flights, dictionaries, isLoading, error } = useFlightSearch(activeSearchParams);
 
   // Apply filters
   const { filters, filteredFlights, updateFilter, resetFilters, filterOptions, hasActiveFilters } =
@@ -42,8 +40,8 @@ function FlightSearchPage() {
 
   return (
     <div className="space-y-4">
-      {/* Search Form */}
-      <SearchForm onSearch={handleSearch} isLoading={isLoading} />
+      {/* Search Form - Pass URL params as initial values if needed, or controlled */}
+      <SearchForm onSearch={handleSearch} isLoading={isLoading} initialValues={activeSearchParams || undefined} />
 
       {/* Error State */}
       {error && (
@@ -92,4 +90,15 @@ function FlightSearchPage() {
 
 export const Route = createFileRoute('/')({
   component: FlightSearchPage,
+  validateSearch: (search: Record<string, unknown>): FlightSearchSchema => {
+    return {
+      origin: search.origin as string,
+      destination: search.destination as string,
+      departureDate: search.departureDate as string,
+      returnDate: search.returnDate as string,
+      adults: Number(search.adults) || 1,
+      currencyCode: search.currencyCode as string,
+      maxResults: Number(search.maxResults) || 20,
+    };
+  },
 });

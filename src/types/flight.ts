@@ -15,6 +15,7 @@ export interface SearchParams {
   nonStop?: boolean;
   currencyCode?: string;
   maxResults?: number;
+  page?: number;
 }
 
 export interface FilterState {

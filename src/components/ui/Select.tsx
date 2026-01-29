@@ -1,7 +1,5 @@
 /**
  * Select Component
- * Reusable dropdown/select input with label and error handling
- * Styled consistently with other form inputs
  */
 
 import React, { useId } from 'react';
@@ -38,7 +36,7 @@ export const Select: React.FC<SelectProps> = ({
   // Determine border color based on error state
   const borderColor = error 
     ? 'border-red-500 focus:ring-red-500' 
-    : 'border-gray-300 focus:ring-blue-500';
+    : 'border-gray-200 focus:border-black focus:ring-black';
 
   return (
     <div className={`${fullWidth ? 'w-full' : ''}`}>
@@ -46,7 +44,7 @@ export const Select: React.FC<SelectProps> = ({
       {label && (
         <label
           htmlFor={selectId}
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="block text-sm font-normal text-gray-800 mb-2"
         >
           {label}
         </label>
@@ -56,12 +54,13 @@ export const Select: React.FC<SelectProps> = ({
       <select
         id={selectId}
         className={`
-          block w-full px-3 py-2 border rounded-lg
-          focus:outline-none focus:ring-2 focus:ring-offset-0
-          disabled:bg-gray-100 disabled:cursor-not-allowed
-          transition-colors duration-200
+          block w-full px-4 py-2.5 border rounded-lg text-gray-900
+          focus:outline-none focus:ring-0.5 focus:ring-offset-0 focus:border-black/60
+          disabled:bg-gray-50 disabled:cursor-not-allowed disabled:text-gray-500
+          transition-all duration-200 font-extralight
           appearance-none
           bg-white
+          cursor-pointer
           ${borderColor}
           ${className}
         `.trim()}
@@ -81,7 +80,7 @@ export const Select: React.FC<SelectProps> = ({
 
       {/* Helper text or error message */}
       {(helperText || error) && (
-        <p className={`mt-1 text-sm ${error ? 'text-red-600' : 'text-gray-500'}`}>
+        <p className={`mt-1.5 text-sm font-medium ${error ? 'text-red-600' : 'text-gray-500'}`}>
           {error || helperText}
         </p>
       )}

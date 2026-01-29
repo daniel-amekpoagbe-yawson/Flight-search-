@@ -34,22 +34,22 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     <Card className="sticky top-4">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">Filters</h2>
+        <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+          <h2 className="text-xl font-bold text-gray-900">Filters</h2>
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={resetFilters}>
-              Clear All
+              ✕ Clear
             </Button>
           )}
         </div>
 
         {/* Result count */}
-        <div className="text-sm text-gray-600">
+        <div className="text-base font-semibold text-gray-800 px-2 py-2 bg-gray-50 rounded-lg text-center">
           {resultCount} flight{resultCount !== 1 ? 's' : ''} found
         </div>
 
         {/* Divider */}
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-100" />
 
         {/* Price Filter */}
         <PriceFilter
@@ -59,7 +59,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(value) => updateFilter('priceRange', value)}
         />
 
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-100" />
 
         {/* Departure Time Filter */}
         <TimeFilter
@@ -68,7 +68,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(value) => updateFilter('departureTimeRange', value)}
         />
 
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-100" />
 
         {/* Arrival Time Filter */}
         <TimeFilter
@@ -77,7 +77,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(value) => updateFilter('arrivalTimeRange', value)}
         />
 
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-100" />
 
         {/* Stops Filter */}
         <StopsFilter
@@ -85,7 +85,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
           onChange={(value) => updateFilter('stops', value)}
         />
 
-        <div className="border-t border-gray-200" />
+        <div className="border-t border-gray-100" />
 
         {/* Airline Filter */}
         <AirlineFilter

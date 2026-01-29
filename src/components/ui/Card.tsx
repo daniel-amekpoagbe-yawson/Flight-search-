@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 
 interface CardProps {
@@ -18,17 +16,17 @@ export const Card: React.FC<CardProps> = ({
   // Padding variations
   const paddingStyles = {
     none: '',
-    sm: 'p-3',
-    md: 'p-4 md:p-6',
-    lg: 'p-6 md:p-8',
+    sm: 'p-2 md:p-3',
+    md: 'p-3 md:p-4',
+    lg: 'p-4 md:p-6',
   };
 
   return (
     <div
       className={`
-        bg-white rounded-lg shadow-sm border border-gray-200
+        bg-white rounded-xl shadow-sm border border-gray-100
         ${paddingStyles[padding]}
-        ${hover ? 'hover:shadow-md transition-shadow duration-200' : ''}
+        ${hover ? 'hover:shadow-lg hover:border-gray-200 transition-all duration-300' : ''}
         ${className}
       `.trim()}
     >

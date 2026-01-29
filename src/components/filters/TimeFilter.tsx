@@ -26,15 +26,15 @@ export const TimeFilter: React.FC<TimeFilterProps> = ({ value, label, onChange }
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-semibold text-gray-900">{label}</label>
+    <div className="space-y-4">
+      <label className="block text-sm font-bold text-gray-900 uppercase tracking-wide">{label}</label>
       
-      <div className="space-y-2">
+      <div className="space-y-4">
         {/* Min Time */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-600">From</span>
-            <span className="text-sm font-medium text-gray-700">{formatHour(value[0])}</span>
+        <div className="bg-gray-50 rounded-lg p-3">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-xs font-bold text-gray-700 uppercase">From</span>
+            <span className="text-base font-bold text-gray-900">{formatHour(value[0])}</span>
           </div>
           <input
             type="range"
@@ -42,15 +42,15 @@ export const TimeFilter: React.FC<TimeFilterProps> = ({ value, label, onChange }
             max="23"
             value={value[0]}
             onChange={handleMinChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="w-full h-2.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
           />
         </div>
 
         {/* Max Time */}
-        <div>
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-600">To</span>
-            <span className="text-sm font-medium text-gray-700">{formatHour(value[1])}</span>
+        <div className="bg-gray-50 rounded-lg p-3">
+          <div className="flex justify-between items-center mb-3">
+            <span className="text-xs font-bold text-gray-700 uppercase">To</span>
+            <span className="text-base font-bold text-gray-900">{formatHour(value[1])}</span>
           </div>
           <input
             type="range"
@@ -58,7 +58,7 @@ export const TimeFilter: React.FC<TimeFilterProps> = ({ value, label, onChange }
             max="23"
             value={value[1]}
             onChange={handleMaxChange}
-            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            className="w-full h-2.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
           />
         </div>
       </div>

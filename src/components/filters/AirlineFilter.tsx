@@ -27,18 +27,18 @@ export const AirlineFilter: React.FC<AirlineFilterProps> = ({
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700">Airlines</label>
-      <div className="max-h-48 overflow-y-auto space-y-2">
+    <div className="space-y-4">
+      <label className="text-xs font-bold uppercase tracking-wide text-gray-900">Airlines</label>
+      <div className="max-h-56 overflow-y-auto space-y-3 pr-2">
         {airlines.map((code) => (
-          <label key={code} className="flex items-center">
+          <label key={code} className="flex items-center cursor-pointer group">
             <input
               type="checkbox"
               checked={selected.includes(code)}
               onChange={() => toggleAirline(code)}
-              className="mr-2 h-4 w-4 text-blue-600 rounded"
+              className="mr-3 h-4 w-4 accent-black rounded cursor-pointer"
             />
-            <span className="text-sm text-gray-700">{getAirlineName(code)}</span>
+            <span className="text-sm font-semibold text-gray-900 group-hover:text-black transition-colors">{getAirlineName(code)}</span>
           </label>
         ))}
       </div>

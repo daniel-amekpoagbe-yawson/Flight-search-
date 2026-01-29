@@ -22,19 +22,21 @@ export const StopsFilter: React.FC<StopsFilterProps> = ({ value, onChange }) => 
   };
 
   return (
-    <div className="space-y-2">
-      <label className="text-sm font-medium text-gray-700">Stops</label>
-      {options.map((option) => (
-        <label key={option.value} className="flex items-center">
-          <input
-            type="checkbox"
-            checked={value.includes(option.value)}
-            onChange={() => toggleStop(option.value)}
-            className="mr-2 h-4 w-4 text-blue-600 rounded"
-          />
-          <span className="text-sm text-gray-700">{option.label}</span>
-        </label>
-      ))}
+    <div className="space-y-4">
+      <label className="text-xs font-bold uppercase tracking-wide text-gray-900">Stops</label>
+      <div className="space-y-3">
+        {options.map((option) => (
+          <label key={option.value} className="flex items-center cursor-pointer group">
+            <input
+              type="checkbox"
+              checked={value.includes(option.value)}
+              onChange={() => toggleStop(option.value)}
+              className="mr-3 h-4 w-4 accent-black rounded cursor-pointer"
+            />
+            <span className="text-sm font-semibold text-gray-900 group-hover:text-black transition-colors">{option.label}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 };

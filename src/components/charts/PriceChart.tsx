@@ -60,42 +60,65 @@ export const PriceChart: React.FC<PriceChartProps> = ({
 
   return (
     <Card className="mb-6">
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Price Distribution</h2>
-        <div className="flex gap-6 text-sm">
-          <div>
-            <span className="text-gray-600">Average: </span>
-            <span className="font-semibold">{formatPrice(priceTrend.average, currency)}</span>
+      <div className="mb-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">Price Distribution</h2>
+        <div className="grid grid-cols-3 gap-4">
+          <div className="bg-gray-50 rounded-lg p-4">
+            <span className="text-xs font-bold uppercase tracking-wide text-gray-600 block mb-1">Average</span>
+            <span className="font-bold text-lg text-gray-900">{formatPrice(priceTrend.average, currency)}</span>
           </div>
-          <div>
-            <span className="text-gray-600">Lowest: </span>
-            <span className="font-semibold text-green-600">{formatPrice(priceTrend.lowest, currency)}</span>
+          <div className="bg-emerald-50 rounded-lg p-4">
+            <span className="text-xs font-bold uppercase tracking-wide text-emerald-700 block mb-1">Lowest</span>
+            <span className="font-bold text-lg text-emerald-700">{formatPrice(priceTrend.lowest, currency)}</span>
           </div>
-          <div>
-            <span className="text-gray-600">Highest: </span>
-            <span className="font-semibold text-red-600">{formatPrice(priceTrend.highest, currency)}</span>
+          <div className="bg-red-50 rounded-lg p-4">
+            <span className="text-xs font-bold uppercase tracking-wide text-red-700 block mb-1">Highest</span>
+            <span className="font-bold text-lg text-red-700">{formatPrice(priceTrend.highest, currency)}</span>
           </div>
         </div>
       </div>
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="price" 
             tickFormatter={(value) => `$${value}`}
             label={{ value: 'Price', position: 'insideBottom', offset: -5 }}
+            stroke="#9CA3AF"
+            style={{ fontSize: '12px', fontWeight: 500 }}
           />
-          <YAxis label={{ value: '# of Flights', angle: -90, position: 'insideLeft' }} />
+          <YAxis 
+            label={{ value: '# of Flights', angle: -90, position: 'insideLeft' }}
+            stroke="#9CA3AF"
+            style={{ fontSize: '12px', fontWeight: 500 }}
+          />
           <Tooltip 
             formatter={(value) => [`${value} flights`, '']}
             labelFormatter={(value) => `Price: $${value}`}
+            contentStyle={{
+              backgroundColor: '#fff',
+              border: '1px solid #e5e7eb',
+              borderRadius: '8px',
+              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+            }}
+            labelStyle={{
+              color: '#111827',
+              fontWeight: 600,
+              fontSize: '13px'
+            }}
           />
-          <Legend />
+          <Legend 
+            wrapperStyle={{
+              fontSize: '13px',
+              fontWeight: 600,
+              color: '#374151'
+            }}
+          />
           <Line 
             type="monotone" 
             dataKey="allFlights" 
-            stroke="#9CA3AF" 
+            stroke="#d1d5db" 
             strokeWidth={2}
             name="All Flights"
             dot={false}
@@ -103,7 +126,7 @@ export const PriceChart: React.FC<PriceChartProps> = ({
           <Line 
             type="monotone" 
             dataKey="filtered" 
-            stroke="#3B82F6" 
+            stroke="#000000" 
             strokeWidth={3}
             name="Filtered"
             dot={false}

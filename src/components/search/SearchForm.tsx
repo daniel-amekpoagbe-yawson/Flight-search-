@@ -117,31 +117,31 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
   }));
 
   return (
-    <Card className="mb-6">
+    <Card className="mb-2">
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Trip type selector */}
-        <div className="flex gap-4">
-          <label className="flex items-center">
+        <div className="flex gap-6 border-b border-gray-100 pb-4">
+          <label className="flex items-center cursor-pointer">
             <input
               type="radio"
               name="tripType"
               value="roundtrip"
               checked={tripType === 'roundtrip'}
               onChange={(e) => setTripType(e.target.value as 'roundtrip')}
-              className="mr-2"
+              className="mr-3 w-3 h-3 accent-black cursor-pointer"
             />
-            <span className="text-sm font-medium">Round-trip</span>
+            <span className="text-sm font-normal text-gray-900">Round-trip</span>
           </label>
-          <label className="flex items-center">
+          <label className="flex items-center cursor-pointer">
             <input
               type="radio"
               name="tripType"
               value="oneway"
               checked={tripType === 'oneway'}
               onChange={(e) => setTripType(e.target.value as 'oneway')}
-              className="mr-2"
+              className="mr-3 w-4 h-3` accent-black cursor-pointer"
             />
-            <span className="text-sm font-medium">One-way</span>
+            <span className="text-sm font-normal text-gray-900">One-way</span>
           </label>
         </div>
 
@@ -169,27 +169,27 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
             
             {/* Autocomplete dropdown */}
             {showOriginSuggestions && origin.length >= 2 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {isLoadingOrigin ? (
-                  <div className="p-3 text-sm text-gray-500">Searching...</div>
+                  <div className="p-3 text-sm text-gray-600 font-normal">Loading airports...</div>
                 ) : originAirports.length > 0 ? (
                   originAirports.map((airport) => (
                     <button
                       key={airport.id}
                       type="button"
                       onClick={() => selectAirport(airport, 'origin')}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
                     >
-                      <div className="font-medium text-sm">
+                      <div className="font-semibold text-sm text-gray-900">
                         {airport.name} ({airport.iataCode})
                       </div>
-                      <div className="text-xs text-gray-600">
+                      <div className="text-xs text-gray-600 font-normal">
                         {airport.address.cityName}, {airport.address.countryName}
                       </div>
                     </button>
                   ))
                 ) : (
-                  <div className="p-3 text-sm text-gray-500">No airports found</div>
+                  <div className="p-4 text-sm text-gray-600 font-normal">No airports found</div>
                 )}
               </div>
             )}
@@ -217,27 +217,27 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
             
             {/* Autocomplete dropdown */}
             {showDestinationSuggestions && destination.length >= 2 && (
-              <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+              <div className="absolute z-10 w-full mt-2 bg-white border border-gray-100 rounded-lg shadow-lg max-h-60 overflow-y-auto">
                 {isLoadingDestination ? (
-                  <div className="p-3 text-sm text-gray-500">Searching...</div>
+                  <div className="p-4 text-sm text-gray-600 font-medium">Searching...</div>
                 ) : destinationAirports.length > 0 ? (
                   destinationAirports.map((airport) => (
                     <button
                       key={airport.id}
                       type="button"
                       onClick={() => selectAirport(airport, 'destination')}
-                      className="w-full text-left px-3 py-2 hover:bg-gray-100 transition-colors"
+                      className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
                     >
-                      <div className="font-medium text-sm">
+                      <div className="font-semibold text-sm text-gray-900">
                         {airport.name} ({airport.iataCode})
                       </div>
-                      <div className="text-xs text-gray-600">
+                      <div className="text-xs text-gray-600 font-medium">
                         {airport.address.cityName}, {airport.address.countryName}
                       </div>
                     </button>
                   ))
                 ) : (
-                  <div className="p-3 text-sm text-gray-500">No airports found</div>
+                  <div className="p-4 text-sm text-gray-600 font-medium">No airports found</div>
                 )}
               </div>
             )}
@@ -245,7 +245,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
         </div>
 
         {/* Dates and Passengers - Responsive grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
           <Input
             label="Departure"
             type="date"
@@ -281,11 +281,12 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
         <Button
           type="submit"
           variant="primary"
-          size="lg"
+          size="md"
           fullWidth
           isLoading={isLoading}
+          className="mt-4"
         >
-          {isLoading ? 'Searching...' : 'Search Flights'}
+          {isLoading ? 'Searching Flights...' : 'Search Flights'}
         </Button>
       </form>
     </Card>

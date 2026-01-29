@@ -24,10 +24,11 @@ import { createRootRoute, Outlet } from '@tanstack/react-router';
 
 export const Route = createRootRoute({
   component: () => (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-2xl font-bold text-gray-900">✈️ Flight Search</h1>
+    <div className="min-h-screen bg-white">
+      <header className="bg-white border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4  py-4">
+          <h1 className="text-xl font-semibold text-gray-900">✈️ Flight Search Engine</h1>
+          <p className="text-xs text-gray-600 font-extratight mt-1">Find and book the best flights for your journey</p>
         </div>
       </header>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

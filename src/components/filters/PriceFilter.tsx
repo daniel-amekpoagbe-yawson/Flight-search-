@@ -14,34 +14,40 @@ export const PriceFilter: React.FC<PriceFilterProps> = ({
   onChange,
 }) => {
   return (
-    <div className="space-y-3">
-      <div className="flex justify-between items-center">
-        <label className="text-sm font-medium text-gray-700">Price Range</label>
-        <span className="text-sm text-gray-600">
-          ${value[0]} - ${value[1]}
-        </span>
+    <div className="space-y-4">
+      <div className="flex justify-between items-end">
+        <label className="text-sm font-bold text-gray-900 uppercase tracking-wide">Price Range</label>
+        <div className="text-right">
+          <span className="text-lg font-bold text-gray-900">
+            ${value[0].toLocaleString()} — ${value[1].toLocaleString()}
+          </span>
+        </div>
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-3 pt-2">
         {/* Min slider */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={value[0]}
-          onChange={(e) => onChange([Number(e.target.value), value[1]])}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
+        <div>
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={value[0]}
+            onChange={(e) => onChange([Number(e.target.value), value[1]])}
+            className="w-full h-2.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+          />
+        </div>
         
         {/* Max slider */}
-        <input
-          type="range"
-          min={min}
-          max={max}
-          value={value[1]}
-          onChange={(e) => onChange([value[0], Number(e.target.value)])}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-        />
+        <div>
+          <input
+            type="range"
+            min={min}
+            max={max}
+            value={value[1]}
+            onChange={(e) => onChange([value[0], Number(e.target.value)])}
+            className="w-full h-2.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
+          />
+        </div>
       </div>
     </div>
   );

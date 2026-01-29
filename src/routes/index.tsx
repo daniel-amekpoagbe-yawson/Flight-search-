@@ -58,8 +58,9 @@ function FlightSearchPage() {
 
       {/* Error State */}
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-800">{error.message}</p>
+        <div className="bg-red-50 border border-red-100 rounded-xl p-6">
+          <p className="text-sm font-semibold text-red-900">✕ Error</p>
+          <p className="text-red-800 font-medium mt-2">{error.message}</p>
         </div>
       )}
 

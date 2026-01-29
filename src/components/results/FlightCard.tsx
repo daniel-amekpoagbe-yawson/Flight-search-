@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
+import BookingModal from './BookingModal';
+import { bookFlight } from '../../service/mockBooking';
 import type { ProcessedFlight } from '../../types/flight';
 import {formatDuration, formatPrice, getTimeFromISO } from '../../utils/Helper';
 
@@ -11,6 +13,10 @@ interface FlightCardProps {
 }
 
 export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, isBestDeal = false }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
+  const [bookingRef, setBookingRef] = useState<string | null>(null);
+  const [bookingError, setBookingError] = useState<string | null>(null);
+  const [bookingLoading, setBookingLoading] = useState(false);
   const itinerary = flight.itineraries[0];
   const firstSegment = itinerary.segments[0];
   const lastSegment = itinerary.segments[itinerary.segments.length - 1];
@@ -41,6 +47,7 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
   const layovers = getLayoverInfo();
 
   return (
+    <>  
     <Card hover className="mb-5 relative overflow-hidden">
       {/* Best Deal Badge */}
       {isBestDeal && (
@@ -120,11 +127,48 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
             <div className="text-sm font-normal text-gray-600 mt-1">per person</div>
           </div>
           
-          <Button variant="primary" size="md" className="w-full lg:w-auto">
-            Book Flight
-          </Button>
+          <div className="w-full lg:w-auto">
+            {bookingRef ? (
+              <div className="bg-green-50 border border-green-100 text-green-800 px-4 py-2 rounded-md text-sm font-medium">Booked — Ref: {bookingRef}</div>
+            ) : (
+              <Button
+                variant="primary"
+                size="md"
+                className="w-full"
+                onClick={() => { setModalOpen(true); setBookingError(null); }}
+                disabled={bookingLoading}
+              >
+                {bookingLoading ? 'Processing...' : 'Book Flight'}
+              </Button>
+            )}
+
+            {bookingError && <div className="text-sm text-red-700 mt-2">{bookingError}</div>}
+          </div>
         </div>
       </div>
     </Card>
+
+      <BookingModal
+        open={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        flightSummary={`${flight.origin.iataCode} → ${flight.destination.iataCode} • ${formatPrice(flight.priceNumeric, flight.price.currency)}`}
+        onConfirm={async (payment) => {
+          setBookingLoading(true);
+          setBookingError(null);
+          try {
+            const res = await bookFlight(flight, payment as any);
+            setBookingRef(res.bookingRef || null);
+            setModalOpen(false);
+          } catch (err: any) {
+            setBookingError(err?.message || 'Booking failed');
+            throw err;
+          } finally {
+            setBookingLoading(false);
+          }
+        }}
+      />
+    </>
+
   );
+
 };

@@ -4,7 +4,7 @@
  */
 
 import { useQuery } from '@tanstack/react-query';
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { amadeusService } from '../service/amadeus';
 import type {
   SearchParams,
@@ -106,7 +106,7 @@ export const useFlightFilters = (flights: ProcessedFlight[]) => {
   const initialDurationRange = useMemo(() => getDurationRange(flights), [flights]);
 
   // Initialize filter state with sensible defaults
-   const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState<FilterState>({
     priceRange: initialPriceRange,
     stops: [],
     airlines: [],
@@ -114,6 +114,24 @@ export const useFlightFilters = (flights: ProcessedFlight[]) => {
     arrivalTimeRange: [0, 23],
     duration: initialDurationRange,
   });
+
+  // Ensure filters are initialized when flights data first arrives.
+  // useState's initial value only runs once, so when `flights` is empty at mount
+  // we need to populate sensible ranges once real data appears.
+  const initialized = useRef(false);
+  useEffect(() => {
+    if (!initialized.current && flights.length > 0) {
+      setFilters({
+        priceRange: initialPriceRange,
+        stops: [],
+        airlines: [],
+        departureTimeRange: [0, 23],
+        arrivalTimeRange: [0, 23],
+        duration: initialDurationRange,
+      });
+      initialized.current = true;
+    }
+  }, [flights, initialPriceRange, initialDurationRange]);
 
   // Apply filters to get filtered flight list
   const filteredFlights = useMemo(() => {

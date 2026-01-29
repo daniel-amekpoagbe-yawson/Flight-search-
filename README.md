@@ -8,20 +8,20 @@ A responsive flight search engine built with **React 19**, **TypeScript**, and t
 
 ### Core Requirements ✅
 
--  **Search & Results** — Real-time airport autocomplete + 50 flights fetched, paginated to 10/page
--  **Live Price Graph** — Area chart with real-time updates as filters change
--  **Complex Filtering** — Price, Stops, Airlines, Time Ranges, Duration (all instant)
--  **Responsive Design** — Fully functional mobile, tablet, and desktop layouts
+- **Search & Results** — Real-time airport autocomplete + 50 flights fetched, paginated to 10/page
+- **Live Price Graph** — Area chart with real-time updates as filters change
+- **Complex Filtering** — Price, Stops, Airlines, Time Ranges, Duration (all instant)
+- **Responsive Design** — Fully functional mobile, tablet, and desktop layouts
 
 ### Bonus Features 🎁
 
--  **Smart Pagination** — React Query prefetch for instant page navigation (no loading delay)
--  **Professional Analytics** — 4-stat dashboard (avg, lowest, highest, savings %)
--  **Booking Modal** — Mock payment flow with success/error handling
--  **Sort Controls** — Sort by price, duration, departure time
--  **Shareable Links** — URL-based search params for bookmarking
--  **Mobile-First** — Optimized padding, responsive grid (2-col stats on mobile)
--  **Performance** — React Query caching, memoized filters, no unnecessary re-renders
+- **Smart Pagination** — React Query prefetch for instant page navigation (no loading delay)
+- **Professional Analytics** — 4-stat dashboard (avg, lowest, highest, savings %)
+- **Booking Modal** — Mock payment flow with success/error handling
+- **Sort Controls** — Sort by price, duration, departure time
+- **Shareable Links** — URL-based search params for bookmarking
+- **Mobile-First** — Optimized padding, responsive grid (2-col stats on mobile)
+- **Performance** — React Query caching, memoized filters, no unnecessary re-renders
 
 ---
 
@@ -114,24 +114,24 @@ src/
 
 ```bash
 # 1. Clone
-git clone <your-repo>
+git clone https://github.com/daniel-amekpoagbe-yawson/flight-search-engine
 cd flight-search-engine
 
 # 2. Install
-npm install
+bun install
 
 # 3. Environment
 cat > .env << EOF
-VITE_AMADEUS_API_KEY=your_key_here
-VITE_AMADEUS_API_SECRET=your_secret_here
+VITE_AMADEUS_API_KEY=LuV56Wa0Ej67Db377FrGwe5shpKKNGiF
+VITE_AMADEUS_API_SECRET=GAs3GFMP1zDtHbUL
 VITE_AMADEUS_API_URL=https://test.api.amadeus.com/v2
+
 EOF
 
 # 4. Run
-npm run dev
+bun run dev
 # → http://localhost:5173
 ```
-
 
 ---
 
@@ -233,18 +233,18 @@ Result: Accurate filtering + pagination + sorting = professional UX
 
 ## 🔐 Security & Best Practices
 
--  **TypeScript** — Full type safety
--  **Environment Variables** — Secrets not in code
--  **OAuth2** — Amadeus token refresh + validation
--  **Error Boundaries** — Graceful fallbacks
--  **Input Validation** — Form validation + type checking
--  **Responsive** — No horizontal scroll on mobile
+- **TypeScript** — Full type safety
+- **Environment Variables** — Secrets not in code
+- **OAuth2** — Amadeus token refresh + validation
+- **Error Boundaries** — Graceful fallbacks
+- **Input Validation** — Form validation + type checking
+- **Responsive** — No horizontal scroll on mobile
 
 ---
 
 ## 📋 What's Included
 
- **Responsive UI** — Mobile, tablet, desktop layouts  
+**Responsive UI** — Mobile, tablet, desktop layouts  
  **Real-time Filtering** — Instant updates across 5 filter types  
  **Live Charts** — Professional price analytics  
  **Pagination** — Smart prefetch for zero-wait navigation  
@@ -257,9 +257,6 @@ Result: Accurate filtering + pagination + sorting = professional UX
 ---
 
 ## 🚀 Deployment
-
-
-
 
 ### Environment Variables (For testing only please)
 
@@ -297,11 +294,9 @@ This project demonstrates:
 
 ---
 
-
-
 ## 👨‍💻 Author
 
-**Daniel Amekpoagbe** 
+**Daniel Amekpoagbe**
 
 ---
 

@@ -3,8 +3,8 @@
  * Uses React Query for efficient data fetching and caching
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { amadeusService } from '../service/amadeus';
 import type {
   SearchParams,
@@ -28,25 +28,33 @@ import {
 // ============================================
 
 /**
- * Main hook for searching flights
+ * Main hook for searching flights with pagination support
  * Handles data fetching, processing, and caching with React Query
  */
-export const useFlightSearch = (searchParams: SearchParams | null) => {
+export const useFlightSearch = (searchParams: SearchParams | null, page: number = 1) => {
+  const queryClient = useQueryClient();
+  
+  // Amadeus API doesn't support offset-based pagination
+  // We'll cache full results and slice on client side
   const {
     data: rawData,
     isLoading,
     error,
     refetch,
   } = useQuery({
-    queryKey: ['flights', searchParams],
+    queryKey: ['flights', searchParams], // page not in key since we cache full results
     queryFn: () => {
       if (!searchParams) throw new Error('Search parameters required');
-      return amadeusService.searchFlights(searchParams);
+      // Fetch 50 results for pagination (balance between data and performance)
+      return amadeusService.searchFlights({
+        ...searchParams,
+        maxResults: 50, // Fetch 50 items, display 10 per page
+      });
     },
-    enabled: !!searchParams, // Only run when we have search params
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
-    gcTime: 10 * 60 * 1000, // Keep in cache for 10 minutes
-    retry: 1, // Retry failed requests once
+    enabled: !!searchParams,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    retry: 1,
   });
 
   // Process raw flight data into enriched format
@@ -55,16 +63,48 @@ export const useFlightSearch = (searchParams: SearchParams | null) => {
     return rawData.data.map(processFlightOffer);
   }, [rawData]);
 
+  // Implement client-side pagination (10 items per page)
+  const pageSize = 10;
+  const totalPages = Math.ceil(processedFlights.length / pageSize);
+  const startIdx = (page - 1) * pageSize;
+  const endIdx = startIdx + pageSize;
+  const paginatedFlights = processedFlights.slice(startIdx, endIdx);
+
+  // Prefetch next page
+  const prefetchNextPage = useCallback(() => {
+    if (page < totalPages && searchParams) {
+      // Prefetch is automatic via React Query caching since we fetch all data
+      // Just ensure next page's data is available
+      queryClient.ensureQueryData({
+        queryKey: ['flights', searchParams],
+        queryFn: () =>
+          amadeusService.searchFlights({
+            ...searchParams,
+            maxResults: 50,
+          }),
+      });
+    }
+  }, [page, totalPages, searchParams, queryClient]);
+
   // Extract dictionaries for airline names, etc.
   const dictionaries = rawData?.dictionaries;
 
   return {
-    flights: processedFlights,
+    flights: paginatedFlights,
+    allFlights: processedFlights, // Return all flights for chart data
     dictionaries,
     isLoading,
     error: error as Error | null,
     refetch,
     meta: rawData?.meta,
+    pagination: {
+      currentPage: page,
+      pageSize,
+      totalItems: processedFlights.length,
+      totalPages,
+      hasNextPage: page < totalPages,
+    },
+    prefetchNextPage,
   };
 };
 
@@ -115,23 +155,18 @@ export const useFlightFilters = (flights: ProcessedFlight[]) => {
     duration: initialDurationRange,
   });
 
-  // Ensure filters are initialized when flights data first arrives.
-  // useState's initial value only runs once, so when `flights` is empty at mount
-  // we need to populate sensible ranges once real data appears.
-  const initialized = useRef(false);
+  // Reset filters whenever flight data changes (new search, data refetch).
+  // This ensures filter bounds reflect current flights and filters don't hide all results.
   useEffect(() => {
-    if (!initialized.current && flights.length > 0) {
-      setFilters({
-        priceRange: initialPriceRange,
-        stops: [],
-        airlines: [],
-        departureTimeRange: [0, 23],
-        arrivalTimeRange: [0, 23],
-        duration: initialDurationRange,
-      });
-      initialized.current = true;
-    }
-  }, [flights, initialPriceRange, initialDurationRange]);
+    setFilters({
+      priceRange: initialPriceRange,
+      stops: [],
+      airlines: [],
+      departureTimeRange: [0, 23],
+      arrivalTimeRange: [0, 23],
+      duration: initialDurationRange,
+    });
+  }, [initialPriceRange, initialDurationRange]);
 
   // Apply filters to get filtered flight list
   const filteredFlights = useMemo(() => {

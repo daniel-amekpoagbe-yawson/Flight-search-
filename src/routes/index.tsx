@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { useState, useEffect } from 'react';
 import type { SearchParams } from '../types/flight';
 import { useFlightFilters, useFlightSearch, useFlightSort, usePriceTrend } from '../hooks/useFlights';
 import { SearchForm } from '../components/search/SearchForm';
@@ -6,6 +7,7 @@ import { PriceChart } from '../components/charts/PriceChart';
 import { FilterPanel } from '../components/filters/FilterPanel';
 import { FlightList } from '../components/results/FlightList';
 import { SortControls } from '../components/results/SortControls';
+import { Pagination } from '../components/results/Pagination';
 
 // Define search params validation
 type FlightSearchSchema = Partial<SearchParams>;
@@ -13,6 +15,12 @@ type FlightSearchSchema = Partial<SearchParams>;
 function FlightSearchPage() {
   const navigate = useNavigate({ from: Route.fullPath });
   const searchParams = Route.useSearch();
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Reset to page 1 when search params change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchParams.origin, searchParams.destination, searchParams.departureDate]);
 
   // Determine if we have enough params to search
   const hasRequiredParams = !!(searchParams.origin && searchParams.destination && searchParams.departureDate);
@@ -25,21 +33,40 @@ function FlightSearchPage() {
     });
   };
 
-  // Fetch flights
-  const { flights, dictionaries, isLoading, error } = useFlightSearch(activeSearchParams);
+  // Fetch flights with pagination
+  const { 
+    flights, 
+    allFlights,
+    dictionaries, 
+    isLoading, 
+    error,
+    prefetchNextPage,
+  } = useFlightSearch(activeSearchParams, currentPage);
 
-  // Apply filters
+  // Prefetch next page on mount and page change
+  useEffect(() => {
+    prefetchNextPage();
+  }, [currentPage, prefetchNextPage]);
+
+  // Apply filters to ALL flights (not paginated)
   const { filters, filteredFlights, updateFilter, resetFilters, filterOptions, hasActiveFilters } =
-    useFlightFilters(flights);
+    useFlightFilters(allFlights);
 
   // Sort results
   const { sortedFlights, sortField, sortDirection, toggleSort } = useFlightSort(filteredFlights);
 
+  // Paginate the filtered AND sorted results (10 items per page)
+  const pageSize = 10;
+  const totalFilteredPages = Math.ceil(sortedFlights.length / pageSize);
+  const startIdx = (currentPage - 1) * pageSize;
+  const endIdx = startIdx + pageSize;
+  const paginatedSortedFlights = sortedFlights.slice(startIdx, endIdx);
+
   // Generate price trend data
-  const priceTrend = usePriceTrend(flights, filteredFlights);
+  const priceTrend = usePriceTrend(allFlights, filteredFlights);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 container mx-auto px-4">
       {/* Search Form - Pass URL params as initial values if needed, or controlled */}
       <SearchForm onSearch={handleSearch} isLoading={isLoading} initialValues={activeSearchParams || undefined} />
 
@@ -52,7 +79,23 @@ function FlightSearchPage() {
       )}
 
       {/* Results Section */}
-      {flights.length > 0 && (
+      {isLoading && (
+        <div className="flex items-center justify-center py-16">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto mb-4"></div>
+            <p className="text-gray-600 font-medium">Searching flights...</p>
+          </div>
+        </div>
+      )}
+
+      {!isLoading && flights.length === 0 && activeSearchParams && (
+        <div className="bg-blue-50 border border-gray-500 rounded-xl p-8 text-center">
+          <p className="text-stone-800 font-semibold">No flights found</p>
+          <p className="text-stone-600 text-sm mt-1">Try adjusting your search criteria</p>
+        </div>
+      )}
+
+      {!isLoading && flights.length > 0 && (
         <>
           {/* Price Chart */}
           <PriceChart priceTrend={priceTrend} />
@@ -79,7 +122,17 @@ function FlightSearchPage() {
                 sortDirection={sortDirection}
                 onSort={toggleSort}
               />
-              <FlightList flights={sortedFlights} dictionaries={dictionaries} isLoading={isLoading} />
+              <FlightList flights={paginatedSortedFlights} dictionaries={dictionaries} isLoading={isLoading} />
+              
+              {/* Pagination Controls */}
+              <Pagination
+                currentPage={currentPage}
+                totalItems={filteredFlights.length}
+                pageSize={pageSize}
+                onPageChange={setCurrentPage}
+                isLoading={isLoading}
+                hasNextPage={currentPage < totalFilteredPages}
+              />
             </div>  
           </div>
         </>
@@ -98,7 +151,7 @@ export const Route = createFileRoute('/')({
       returnDate: search.returnDate as string,
       adults: Number(search.adults) || 1,
       currencyCode: search.currencyCode as string,
-      maxResults: Number(search.maxResults) || 20,
+      // maxResults is handled internally for pagination
     };
   },
 });

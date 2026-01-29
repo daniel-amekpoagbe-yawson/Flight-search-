@@ -136,9 +136,13 @@ class AmadeusService {
         destinationLocationCode: params.destination,
         departureDate: params.departureDate,
         adults: params.adults,
-        max: params.maxResults || 20, // Default to 20 items per page
         currencyCode: params.currencyCode || 'USD',
       };
+
+      // Only include max if caller explicitly requests it
+      if (params.maxResults && Number.isFinite(params.maxResults)) {
+        queryParams.max = params.maxResults;
+      }
 
       // Add optional parameters if provided
       if (params.returnDate) {

@@ -2,8 +2,8 @@
 
 import React, { useMemo } from 'react';
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -67,6 +67,11 @@ export const PriceChart: React.FC<PriceChartProps> = ({
     }));
   }, [priceTrend.current, priceTrend.filtered]);
 
+  // Calculate savings if filters are active
+  const savingsPercent = priceTrend.lowest > 0 && priceTrend.average > 0
+    ? Math.round(((priceTrend.average - priceTrend.lowest) / priceTrend.average) * 100)
+    : 0;
+
   if (chartData.length === 0) {
     return (
       <Card className="mb-6 p-6 text-center text-gray-500">
@@ -76,80 +81,149 @@ export const PriceChart: React.FC<PriceChartProps> = ({
   }
 
   return (
-    <Card className="mb-6">
-      <div className="mb-6">
-        <h2 className="text-sm sm:text-lg font-normal text-gray-900 mb-4">Price Distribution</h2>
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-gray-50 rounded-lg p-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 block mb-1">Average</span>
-            <span className="font-bold text-sm text-gray-900">{formatPrice(priceTrend.average, currency)}</span>
+    <Card className="mb-6 bg-gradient-to-br from-slate-50 to-white border border-slate-200">
+      {/* Header */}
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-6">
+          <h2 className="text-lg font-bold text-slate-900">Price Analysis</h2>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {/* Average Price */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-slate-200 hover:border-slate-300 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">Average Price</span>
+            </div>
+            <span className="text-xl font-bold text-slate-900">{formatPrice(priceTrend.average, currency)}</span>
+            <p className="text-xs text-slate-500 mt-2">across all results</p>
           </div>
-          <div className="bg-emerald-50 rounded-lg p-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 block mb-1">Lowest</span>
-            <span className="font-bold text-sm text-emerald-700">{formatPrice(priceTrend.lowest, currency)}</span>
+
+          {/* Lowest Price */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-stone-800">Lowest Price</span>
+            </div>
+            <span className="text-xl font-bold text-stone-700">{formatPrice(priceTrend.lowest, currency)}</span>
+            <p className="text-xs text-stone-600 mt-2">best deal available</p>
           </div>
-          <div className="bg-red-50 rounded-lg p-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-red-700 block mb-1">Highest</span>
-            <span className="font-bold text-sm text-red-700">{formatPrice(priceTrend.highest, currency)}</span>
+
+          {/* Highest Price */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 hover:border-gray-300 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-700">Highest Price</span>
+            </div>
+            <span className="text-xl font-bold text-slate-700">{formatPrice(priceTrend.highest, currency)}</span>
+            <p className="text-xs text-slate-600 mt-2">maximum price</p>
+          </div>
+
+          {/* Potential Savings */}
+          <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 transition-colors">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-gray-800">Save Up To</span>
+            </div>
+            <span className="text-xl font-bold text-gray-700">{savingsPercent}%</span>
+            <p className="text-xs text-gray-600 mt-2"> average price</p>
           </div>
         </div>
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={chartData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-          <XAxis 
-            dataKey="price" 
-            tickFormatter={(value) => `$${value}`}
-            label={{ value: 'Price', position: 'insideBottom', offset: -5 }}
-            stroke="#9CA3AF"
-            style={{ fontSize: '12px', fontWeight: 500 }}
-          />
-          <YAxis 
-            label={{ value: '# of Flights', angle: -90, position: 'insideLeft' }}
-            stroke="#9CA3AF"
-            style={{ fontSize: '12px', fontWeight: 500 }}
-          />
-          <Tooltip 
-            formatter={(value) => [`${value} flights`, '']}
-            labelFormatter={(value) => `Price: $${value}`}
-            contentStyle={{
-              backgroundColor: '#fff',
-              border: '1px solid #e5e7eb',
-              borderRadius: '6px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-            }}
-            labelStyle={{
-              color: '#111827',
-              fontWeight: 600,
-              fontSize: '10px'
-            }}
-          />
-          <Legend 
-            wrapperStyle={{
-              fontSize: '10px',
-              fontWeight: 600,
-              color: '#374151'
-            }}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="allFlights" 
-            stroke="#d1d5db" 
-            strokeWidth={2}
-            name="All Flights"
-            dot={true}
-          />
-          <Line 
-            type="monotone" 
-            dataKey="filtered" 
-            stroke="#000000" 
-            strokeWidth={2}
-            name="Filtered"
-            dot={true}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+      {/* Chart */}
+      <div className="bg-white rounded-xl p-6 border border-slate-100">
+        <ResponsiveContainer width="100%" height={350}>
+          <AreaChart 
+            data={chartData}
+            margin={{ top: 10, right: 30, left: 0, bottom: 20 }}
+          >
+            <defs>
+              <linearGradient id="colorAllFlights" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#e5e7eb" stopOpacity={0.3}/>
+                <stop offset="95%" stopColor="#e5e7eb" stopOpacity={0}/>
+              </linearGradient>
+              <linearGradient id="colorFiltered" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#0f172a" stopOpacity={0.4}/>
+                <stop offset="95%" stopColor="#0f172a" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid 
+              strokeDasharray="4 4" 
+              stroke="#e2e8f0" 
+              vertical={false}
+              horizontalPoints={[0]}
+            />
+            <XAxis 
+              dataKey="price" 
+              tickFormatter={(value) => `$${value}`}
+              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+              axisLine={{ stroke: '#cbd5e1' }}
+              tickLine={{ stroke: '#cbd5e1' }}
+            />
+            <YAxis 
+              tick={{ fill: '#64748b', fontSize: 12, fontWeight: 500 }}
+              axisLine={{ stroke: '#cbd5e1' }}
+              tickLine={{ stroke: '#cbd5e1' }}
+              label={{ value: '# of Flights', angle: -90, position: 'insideLeft', offset: 10, style: { fill: '#64748b', fontWeight: 500 } }}
+            />
+            <Tooltip 
+              formatter={(value) => [`${value} flights`, '']}
+              labelFormatter={(value) => `Price Range: $${value} - $${value + 50}`}
+              contentStyle={{
+                backgroundColor: '#fff',
+                border: '2px solid #e2e8f0',
+                borderRadius: '8px',
+                boxShadow: '0 10px 25px rgba(0, 0, 0, 0.1)',
+                padding: '12px'
+              }}
+              labelStyle={{
+                color: '#0f172a',
+                fontWeight: 700,
+                fontSize: '13px'
+              }}
+              itemStyle={{
+                color: '#475569',
+                fontWeight: 600,
+                fontSize: '12px'
+              }}
+              cursor={{ stroke: '#cbd5e1', strokeWidth: 2 }}
+            />
+            <Legend 
+              wrapperStyle={{
+                paddingTop: '20px',
+                fontWeight: 600,
+                color: '#334155'
+              }}
+              iconType="line"
+            />
+            <Area 
+              type="monotone" 
+              dataKey="allFlights" 
+              stroke="#9ca3af"
+              strokeWidth={2}
+              fill="url(#colorAllFlights)"
+              name="All Flights"
+              isAnimationActive={true}
+            />
+            <Area 
+              type="monotone" 
+              dataKey="filtered" 
+              stroke="#0f172a"
+              strokeWidth={3}
+              fill="url(#colorFiltered)"
+              name="Filtered Results"
+              isAnimationActive={true}
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
+
+      {/* Footer Info */}
+      <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <p className="text-sm text-stone-700">
+          <span className="font-semibold">💡 Tip:</span> The darker line shows your filtered results. Find the lowest point on the chart to identify the best deals in your price range.
+        </p>
+      </div>
     </Card>
   );
 };
+
+export default PriceChart;

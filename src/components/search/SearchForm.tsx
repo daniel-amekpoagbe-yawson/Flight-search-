@@ -135,7 +135,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, ini
       departureDate,
       returnDate: tripType === 'roundtrip' ? returnDate : undefined,
       adults,
-      maxResults: 50,
+      maxResults: 50, // Max results to fetch (will be paginated to 10 per page)
     };
 
     onSearch(searchParams);

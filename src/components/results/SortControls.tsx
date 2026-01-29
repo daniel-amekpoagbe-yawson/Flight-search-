@@ -14,7 +14,7 @@ export const SortControls: React.FC<SortControlsProps> = ({
 
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 pb-6 border-b border-gray-100">
-      <h3 className="text-lg font-bold text-gray-900">
+      <h3 className="text-base font-semibold text-gray-900">
         Sort Results
       </h3>
       <div className="flex items-center gap-3">
@@ -24,7 +24,7 @@ export const SortControls: React.FC<SortControlsProps> = ({
             <button
               key={field}
               onClick={() => onSort(field)}
-              className={`px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 ${
+              className={`px-4 py-2.5 rounded-lg text-sm font-normal transition-all duration-200 ${
                 sortField === field
                   ? 'bg-black text-white shadow-md'
                   : 'bg-gray-100 text-gray-800 hover:bg-gray-200'

@@ -151,7 +151,7 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
       <BookingModal
         open={isModalOpen}
         onClose={() => setModalOpen(false)}
-        flightSummary={`${flight.origin.iataCode} → ${flight.destination.iataCode} • ${formatPrice(flight.priceNumeric, flight.price.currency)}`}
+        flightSummary={`${firstSegment.departure.iataCode} → ${lastSegment.arrival.iataCode} • ${formatPrice(flight.priceNumeric, flight.price.currency)}`}
         onConfirm={async (payment) => {
           setBookingLoading(true);
           setBookingError(null);

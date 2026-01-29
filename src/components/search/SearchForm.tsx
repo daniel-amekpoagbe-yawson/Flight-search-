@@ -34,11 +34,19 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, ini
   useEffect(() => {
     if (initialValues) {
       if (initialValues.origin) {
-        setOrigin(initialValues.origin);
+        // If we have the airport name stored, use it; otherwise just show the code
+        const originDisplay = originAirportName 
+          ? `${originAirportName} (${initialValues.origin})`
+          : initialValues.origin;
+        setOrigin(originDisplay);
         setSelectedOrigin(initialValues.origin);
       }
       if (initialValues.destination) {
-        setDestination(initialValues.destination);
+        // If we have the airport name stored, use it; otherwise just show the code
+        const destinationDisplay = destinationAirportName 
+          ? `${destinationAirportName} (${initialValues.destination})`
+          : initialValues.destination;
+        setDestination(destinationDisplay);
         setSelectedDestination(initialValues.destination);
       }
       if (initialValues.departureDate) setDepartureDate(initialValues.departureDate);
@@ -103,6 +111,25 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, ini
       setShowOriginSuggestions(false);
     } else {
       setDestination(`${airport.name} (${airport.iataCode})`);
+      setSelectedDestination(airport.iataCode);
+      setShowDestinationSuggestions(false);
+    }
+  };
+
+  // Store airport names for display persistence
+  const [originAirportName, setOriginAirportName] = useState('');
+  const [destinationAirportName, setDestinationAirportName] = useState('');
+
+  // Update airport name storage in selectAirport
+  const selectAirportWithName = (airport: AirportSearchResult, field: 'origin' | 'destination') => {
+    if (field === 'origin') {
+      setOrigin(`${airport.name} (${airport.iataCode})`);
+      setOriginAirportName(airport.name);
+      setSelectedOrigin(airport.iataCode);
+      setShowOriginSuggestions(false);
+    } else {
+      setDestination(`${airport.name} (${airport.iataCode})`);
+      setDestinationAirportName(airport.name);
       setSelectedDestination(airport.iataCode);
       setShowDestinationSuggestions(false);
     }
@@ -208,7 +235,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, ini
                     <button
                       key={airport.id}
                       type="button"
-                      onClick={() => selectAirport(airport, 'origin')}
+                      onClick={() => selectAirportWithName(airport, 'origin')}
                       className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
                     >
                       <div className="font-semibold text-sm text-gray-900">
@@ -256,7 +283,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading, ini
                     <button
                       key={airport.id}
                       type="button"
-                      onClick={() => selectAirport(airport, 'destination')}
+                      onClick={() => selectAirportWithName(airport, 'destination')}
                       className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0"
                     >
                       <div className="font-semibold text-sm text-gray-900">

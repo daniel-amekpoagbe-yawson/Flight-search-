@@ -8,8 +8,6 @@ import { PriceChart } from '../components/charts/PriceChart';
 import { FilterPanel } from '../components/filters/FilterPanel';
 import { FlightList } from '../components/results/FlightList';
 import { SortControls } from '../components/results/SortControls';
-import { ShareButton } from '../components/ui/ShareButton';
-
 
 function FlightSearchPage() {
   const [searchParams, setSearchParams] = useState<SearchParams | null>(null);
@@ -43,18 +41,9 @@ function FlightSearchPage() {
   const priceTrend = usePriceTrend(flights, filteredFlights);
 
   return (
-    <div className="space-y-6">
-      {/* Search Form with Share Button */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div className="flex-1 w-full">
-          <SearchForm onSearch={handleSearch} isLoading={isLoading} />
-        </div>
-        {searchParams && (
-          <div className="w-full md:w-auto">
-            <ShareButton searchParams={searchParams} />
-          </div>
-        )}
-      </div>
+    <div className="space-y-4">
+      {/* Search Form */}
+      <SearchForm onSearch={handleSearch} isLoading={isLoading} />
 
       {/* Error State */}
       {error && (
@@ -71,7 +60,7 @@ function FlightSearchPage() {
           <PriceChart priceTrend={priceTrend} />
 
           {/* Filters and Results */}
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
             {/* Filter Panel - Sidebar */}
             <div className="lg:col-span-1">
               <FilterPanel

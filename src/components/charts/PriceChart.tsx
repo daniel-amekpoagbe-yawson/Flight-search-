@@ -61,19 +61,19 @@ export const PriceChart: React.FC<PriceChartProps> = ({
   return (
     <Card className="mb-6">
       <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Price Distribution</h2>
+        <h2 className="text-sm sm:text-lg font-normal text-gray-900 mb-4">Price Distribution</h2>
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-gray-50 rounded-lg p-4">
-            <span className="text-xs font-bold uppercase tracking-wide text-gray-600 block mb-1">Average</span>
-            <span className="font-bold text-lg text-gray-900">{formatPrice(priceTrend.average, currency)}</span>
+          <div className="bg-gray-50 rounded-lg p-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-gray-600 block mb-1">Average</span>
+            <span className="font-bold text-sm text-gray-900">{formatPrice(priceTrend.average, currency)}</span>
           </div>
-          <div className="bg-emerald-50 rounded-lg p-4">
-            <span className="text-xs font-bold uppercase tracking-wide text-emerald-700 block mb-1">Lowest</span>
-            <span className="font-bold text-lg text-emerald-700">{formatPrice(priceTrend.lowest, currency)}</span>
+          <div className="bg-emerald-50 rounded-lg p-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-emerald-700 block mb-1">Lowest</span>
+            <span className="font-bold text-sm text-emerald-700">{formatPrice(priceTrend.lowest, currency)}</span>
           </div>
-          <div className="bg-red-50 rounded-lg p-4">
-            <span className="text-xs font-bold uppercase tracking-wide text-red-700 block mb-1">Highest</span>
-            <span className="font-bold text-lg text-red-700">{formatPrice(priceTrend.highest, currency)}</span>
+          <div className="bg-red-50 rounded-lg p-2">
+            <span className="text-xs font-semibold uppercase tracking-wide text-red-700 block mb-1">Highest</span>
+            <span className="font-bold text-sm text-red-700">{formatPrice(priceTrend.highest, currency)}</span>
           </div>
         </div>
       </div>
@@ -99,18 +99,18 @@ export const PriceChart: React.FC<PriceChartProps> = ({
             contentStyle={{
               backgroundColor: '#fff',
               border: '1px solid #e5e7eb',
-              borderRadius: '8px',
+              borderRadius: '6px',
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
             }}
             labelStyle={{
               color: '#111827',
               fontWeight: 600,
-              fontSize: '13px'
+              fontSize: '10px'
             }}
           />
           <Legend 
             wrapperStyle={{
-              fontSize: '13px',
+              fontSize: '10px',
               fontWeight: 600,
               color: '#374151'
             }}
@@ -121,15 +121,15 @@ export const PriceChart: React.FC<PriceChartProps> = ({
             stroke="#d1d5db" 
             strokeWidth={2}
             name="All Flights"
-            dot={false}
+            dot={true}
           />
           <Line 
             type="monotone" 
             dataKey="filtered" 
             stroke="#000000" 
-            strokeWidth={3}
+            strokeWidth={2}
             name="Filtered"
-            dot={false}
+            dot={true}
           />
         </LineChart>
       </ResponsiveContainer>

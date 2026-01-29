@@ -22,9 +22,9 @@ export const StopsFilter: React.FC<StopsFilterProps> = ({ value, onChange }) => 
   };
 
   return (
-    <div className="space-y-4">
-      <label className="text-xs font-bold uppercase tracking-wide text-gray-900">Stops</label>
-      <div className="space-y-3">
+    <div className="space-y-3">
+      <label className="text-xs font-semibold uppercase tracking-normal text-gray-900">Stops</label>
+      <div className="space-y-2">
         {options.map((option) => (
           <label key={option.value} className="flex items-center cursor-pointer group">
             <input
@@ -33,7 +33,7 @@ export const StopsFilter: React.FC<StopsFilterProps> = ({ value, onChange }) => 
               onChange={() => toggleStop(option.value)}
               className="mr-3 h-4 w-4 accent-black rounded cursor-pointer"
             />
-            <span className="text-sm font-semibold text-gray-900 group-hover:text-black transition-colors">{option.label}</span>
+            <span className="text-sm font-normal text-gray-900 group-hover:text-black transition-colors">{option.label}</span>
           </label>
         ))}
       </div>

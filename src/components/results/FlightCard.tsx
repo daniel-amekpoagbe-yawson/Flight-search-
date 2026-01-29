@@ -44,7 +44,7 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
     <Card hover className="mb-5 relative overflow-hidden">
       {/* Best Deal Badge */}
       {isBestDeal && (
-        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-amber-500 text-black px-4 py-2.5 rounded-bl-xl font-bold text-sm shadow-lg">
+        <div className="absolute top-0 right-0 bg-gradient-to-br from-amber-400 to-amber-500 text-black px-2 py-1.5 rounded-bl-xl font-mono text-xs shadow-lg">
           ⭐ Best Deal
         </div>
       )}
@@ -54,12 +54,12 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
         <div className="lg:col-span-8 space-y-5">
           {/* Airline header */}
           <div className="flex items-center gap-3 pb-2 border-b border-gray-100">
-            <div className="w-10 h-10 bg-gradient-to-br from-black to-slate-700 rounded-lg flex items-center justify-center shadow-md">
-              <span className="text-xs font-bold text-white">
+            <div className="w-8 h-8 bg-gradient-to-br from-black to-slate-700 rounded-lg flex items-center justify-center shadow-md">
+              <span className="text-xs font-normal text-white">
                 {flight.mainAirline}
               </span>
             </div>
-            <span className="text-base font-semibold text-gray-900">{airlineName}</span>
+            <span className="text-sm font-semibold text-gray-900">{airlineName}</span>
             <span className={`ml-auto text-xs font-semibold px-3 py-1 rounded-full ${
               flight.totalStops === 0 
                 ? 'bg-green-100 text-green-800' 
@@ -73,13 +73,13 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
           <div className="flex items-center justify-between">
             {/* Departure */}
             <div className="flex-shrink-0">
-              <div className="text-2xl font-bold text-gray-900">{getTimeFromISO(firstSegment.departure.at)}</div>
-              <div className="text-sm font-medium text-gray-600 mt-1">{firstSegment.departure.iataCode}</div>
+              <div className="text-base font-medium text-gray-900">{getTimeFromISO(firstSegment.departure.at)}</div>
+              <div className="text-sm font-normal text-gray-600 mt-1">{firstSegment.departure.iataCode}</div>
             </div>
 
             {/* Duration and route line */}
             <div className="flex-grow mx-6 flex flex-col items-center">
-              <div className="text-sm font-medium text-gray-700 mb-2">{formatDuration(flight.totalDuration)}</div>
+              <div className="text-sm font-normal text-gray-700 mb-2">{formatDuration(flight.totalDuration)}</div>
               <div className="flex items-center justify-center w-full relative">
                 <div className="h-0.5 bg-gradient-to-r from-gray-200 via-gray-400 to-gray-200 flex-grow" />
                 <div className="mx-3 flex-shrink-0">
@@ -90,20 +90,20 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
 
             {/* Arrival */}
             <div className="flex-shrink-0 text-right">
-              <div className="text-2xl font-bold text-gray-900">{getTimeFromISO(lastSegment.arrival.at)}</div>
-              <div className="text-sm font-medium text-gray-600 mt-1">{lastSegment.arrival.iataCode}</div>
+              <div className="text-base font-medium text-gray-900">{getTimeFromISO(lastSegment.arrival.at)}</div>
+              <div className="text-sm font-normal text-gray-600 mt-1">{lastSegment.arrival.iataCode}</div>
             </div>
           </div>
 
           {/* Layover Information */}
           {layovers && layovers.length > 0 && (
             <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-xl p-4 border border-gray-100">
-              <p className="text-xs font-bold text-gray-900 uppercase tracking-wider mb-3">Layover Details</p>
+              <p className="text-xs font-semibold text-gray-900 uppercase tracking-wider mb-3">Layover Details</p>
               <div className="space-y-2">
                 {layovers.map((layover, idx) => (
                 <div key={idx} className="flex items-center justify-between text-sm">
-                  <span className="text-gray-700 font-medium">{layover.airport}</span>
-                  <span className="text-gray-600 font-semibold">{Math.floor(layover.duration / 60)}h {layover.duration % 60}m</span>
+                  <span className="text-gray-700 font-normal">{layover.airport}</span>
+                  <span className="text-gray-600 font-medium">{Math.floor(layover.duration / 60)}h {layover.duration % 60}m</span>
                 </div>
               ))}
               </div>
@@ -113,11 +113,11 @@ export const FlightCard: React.FC<FlightCardProps> = ({ flight, dictionaries, is
 
         {/* Price and CTA - Right side */}
         <div className="lg:col-span-4 flex flex-col justify-between items-end gap-4">
-          <div className="text-right">
-            <div className="text-4xl font-bold text-gray-900">
+          <div className="text-right mt-2">
+            <div className="text-lg font-semibold text-gray-900">
               {formatPrice(flight.priceNumeric, flight.price.currency)}
             </div>
-            <div className="text-sm font-medium text-gray-600 mt-1">per person</div>
+            <div className="text-sm font-normal text-gray-600 mt-1">per person</div>
           </div>
           
           <Button variant="primary" size="md" className="w-full lg:w-auto">

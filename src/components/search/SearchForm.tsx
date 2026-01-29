@@ -118,9 +118,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
 
   return (
     <Card className="mb-2">
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         {/* Trip type selector */}
-        <div className="flex gap-6 border-b border-gray-100 pb-4">
+        <div className="flex gap-4 border-b border-gray-100 pb-3">
           <label className="flex items-center cursor-pointer">
             <input
               type="radio"
@@ -128,9 +128,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
               value="roundtrip"
               checked={tripType === 'roundtrip'}
               onChange={(e) => setTripType(e.target.value as 'roundtrip')}
-              className="mr-3 w-3 h-3 accent-black cursor-pointer"
+              className="mr-2 w-3 h-3 accent-black cursor-pointer"
             />
-            <span className="text-sm font-normal text-gray-900">Round-trip</span>
+            <span className="text-xs font-semibold text-gray-900">Round-trip</span>
           </label>
           <label className="flex items-center cursor-pointer">
             <input
@@ -139,9 +139,9 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
               value="oneway"
               checked={tripType === 'oneway'}
               onChange={(e) => setTripType(e.target.value as 'oneway')}
-              className="mr-3 w-4 h-3` accent-black cursor-pointer"
+              className="mr-2 w-3 h-3 accent-black cursor-pointer"
             />
-            <span className="text-sm font-normal text-gray-900">One-way</span>
+            <span className="text-xs font-semibold text-gray-900">One-way</span>
           </label>
         </div>
 
@@ -245,7 +245,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
         </div>
 
         {/* Dates and Passengers - Responsive grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-2 pt-1">
           <Input
             label="Departure"
             type="date"
@@ -284,7 +284,7 @@ export const SearchForm: React.FC<SearchFormProps> = ({ onSearch, isLoading }) =
           size="md"
           fullWidth
           isLoading={isLoading}
-          className="mt-4"
+          className="mt-3"
         >
           {isLoading ? 'Searching Flights...' : 'Search Flights'}
         </Button>

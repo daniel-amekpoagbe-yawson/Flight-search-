@@ -34,7 +34,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
     <Card className="sticky top-4">
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center pb-4 border-b border-gray-100">
+        <div className="flex justify-between items-center pb-2 border-b border-gray-100">
           <h2 className="text-xl font-bold text-gray-900">Filters</h2>
           {hasActiveFilters && (
             <Button variant="ghost" size="sm" onClick={resetFilters}>
@@ -44,7 +44,7 @@ export const FilterPanel: React.FC<FilterPanelProps> = ({
         </div>
 
         {/* Result count */}
-        <div className="text-base font-semibold text-gray-800 px-2 py-2 bg-gray-50 rounded-lg text-center">
+        <div className="text-base font-normal text-gray-800 px-2 py-2 bg-gray-50 rounded-lg text-center">
           {resultCount} flight{resultCount !== 1 ? 's' : ''} found
         </div>
 

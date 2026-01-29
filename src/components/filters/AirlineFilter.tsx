@@ -28,8 +28,8 @@ export const AirlineFilter: React.FC<AirlineFilterProps> = ({
 
   return (
     <div className="space-y-4">
-      <label className="text-xs font-bold uppercase tracking-wide text-gray-900">Airlines</label>
-      <div className="max-h-56 overflow-y-auto space-y-3 pr-2">
+      <label className="text-xs font-semibold uppercase tracking-wide text-gray-900">Airlines</label>
+      <div className="max-h-56 overflow-y-auto space-y-2 pr-2">
         {airlines.map((code) => (
           <label key={code} className="flex items-center cursor-pointer group">
             <input
@@ -38,7 +38,7 @@ export const AirlineFilter: React.FC<AirlineFilterProps> = ({
               onChange={() => toggleAirline(code)}
               className="mr-3 h-4 w-4 accent-black rounded cursor-pointer"
             />
-            <span className="text-sm font-semibold text-gray-900 group-hover:text-black transition-colors">{getAirlineName(code)}</span>
+            <span className="text-sm font-normal text-gray-900 group-hover:text-black transition-colors">{getAirlineName(code)}</span>
           </label>
         ))}
       </div>
